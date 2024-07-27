@@ -57,7 +57,7 @@
 ; If the value of b is bigger than zero the if special form will return the + (sum) procedure, 
 ; so the a-plus-abs-b procedure will return the sum of arguments a and b.
 ; If the value of b is not bigger than zero the if special form will return the - (subtraction) procedure and the 
-; a-plus-abs-b procedure will return the result of a minus b.
+; a-plus-abs-b procedure will return the result of a minus b (which is negative in this case).
 
 ;;; Exercise 1.5
 ;(define (p) (p))

@@ -35,6 +35,13 @@
         (- x)
         x))
 
+;; The book says that 'not' is implemented as a regular procedure
+;; This is the implementation I came up with:
+(define (my-not x)
+  (if (and x #t) #f #t))
+
+(define (>= x y) (not (< x y)))
+
 ;;; Example: Square Roots by Newton’s Method
 (define (sqrt-iter guess x)
     (if (good-enough? guess x)
@@ -54,7 +61,8 @@
     (sqrt-iter 1.0 x))
 
 ;;; Exercise 1.6
-; Since the interpreter uses aplicative order, the then-clause -> ( (sqrt-iter (improve guess x) x) ) will be evaluated before it is passed to the procedure new-if, independently of the value of 'predicate',
+; Since the interpreter uses aplicative order, the then-clause -> ( (sqrt-iter (improve guess x) x) )
+; will be evaluated before it is passed to the procedure new-if, independently of the value of 'predicate',
 ; this, in turn, will cause an infinite number of calls to sqrt-iter that will only stop once the numbers become too big for the machine to handle.
 ; Using a normal if the then clause ( (sqrt-iter (improve guess x) x) ) is only executed when the predicate is false.
 
@@ -72,10 +80,19 @@
 ;;; Exercise 1.7
 ; If two very small numbers are passed to good-enough? (guess and x) the condition returns true before the guess
 ; is improved enough since the precision of the procedure is limited, this leads to wrong results. For example, 
-; fails for (sqrt 0.00001)
+; fails for (sqrt 0.00001) and
+; (sqrt-iter 1.0 0.0001)
+
 ; For very large numbers the test failed at (sqrt 10000000000000) because when the numbers are very large
 ; the machine will not be able to operate on the numbers and will not be able to improve the guess, 
 ; causing an infinite loop
+
+
+; I just arrived at the same solution as http://community.schemewiki.org/?sicp-ex-1.7
+; by reading the problem more carefully at my second time reading the book
+(define (good-enough?-improved guess x)
+  (<= (abs (- (improve guess x) guess)) (* guess 0.001)))
+
 
 ; My answer (does not work)
 ; (define (good-enough-improved? guess x)
@@ -356,6 +373,7 @@
           ((= kinds-of-coins 3) 10)
           ((= kinds-of-coins 4) 25)
           ((= kinds-of-coins 5) 50)))
+;; TODO: Implement the iterative version of count-change
 
 (define (a x)
   (display x))
@@ -373,8 +391,6 @@
 
 (display "Testando 123")
 
-;; Challenge: implement the iterative version of the count-change procedure
-
 ;; Exercise 1.11:
 
 ;; Procedure using a recursive process
@@ -382,6 +398,12 @@
   (if   (or (> n 3) (= n 3))
 	(+ (f (- n 1)) (* 2 (f (- n 2))) (* 3 (f (- n 3))))
 	n))
+;; Or:
+
+(define (f n)
+  (if (< n 3)
+      n
+      (+ (f (- n 1)) (* 2 (f (- n 2))) (* 3 (f (- n 3))))))
 
 ;; Procedure using a iterative process
 (define (f n)
@@ -391,6 +413,19 @@
       a
       (f-iter b c (+ c (* 2 b) (* 3 a)) (- count 1))))
 ;; Sequence: 1 2 4 11 25 59 142 335 796 ...
+
+;; Or:
+
+;; a = f(2) n times => f(n+2)
+;; b = f(1) n times => f(n+1)
+;; c = f(0) n times => f(n)
+(define (f n)
+  (f-iter 2 1 0 n))
+(define (f-iter a b c count)
+	(if (= count 0)
+	  c
+	  (f-iter (+ a (* 2 b) (* 3 c)) a b (- count 1))))
+;; Sequence: 0 1 2 4 11 25 59 142 335 796 ...
 
 ;; Exercise 1.12:
 
@@ -420,3 +455,14 @@
 	(pascal-triangle n (+ initial-line 1)))))
 
 ;; Exercise 1.13
+;; TODO: Add image of the solution
+
+;; Exercise 1.14
+
+;; Exercise 1.15
+(define (cube x) (* x x x))
+(define (p x) (- (* 3 x) (* 4 (cube x))))
+(define (sine angle)
+  (if (not (> (abs angle) 0.1))
+      angle
+      (p (sine (/ angle 3.0)))))
