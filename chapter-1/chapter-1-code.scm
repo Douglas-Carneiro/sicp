@@ -458,6 +458,12 @@
 ;; TODO: Add image of the solution
 
 ;; Exercise 1.14
+;; Number of steps equal to Fib(n-1) (number of nodes in the tree), we now know from exercise 1.13 that the value
+;; of Fib(n) grows exponentially. So, the Order of Growth for the number of
+;; steps is approx. O((p^n)/sqrt(5)), where p is the golden ratio.
+
+;; The procedure produces a tree with a depth of 15, we can see that this number is probably a linear function of n.
+;; So the order of growth for the order of growth for the space required is O(n)
 
 ;; Exercise 1.15
 (define (cube x) (* x x x))
