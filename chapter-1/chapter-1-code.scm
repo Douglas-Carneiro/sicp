@@ -472,3 +472,19 @@
   (if (not (> (abs angle) 0.1))
       angle
       (p (sine (/ angle 3.0)))))
+
+;; a. The procedure p is applied 5 times for (sine 12.15), as shown below:
+;; (sine 12.15)
+;; (p (sine 4.05))
+;; (p (p (sine 1.35)))
+;; (p (p (p (sine 0.45))))
+;; (p (p (p (p (sine 0.15)))))
+;; (p (p (p (p (p (sine 0.05))))))
+;; (p (p (p (p .14950000000000002))))
+;; (p (p (p .43513455050000005)))
+;; (p (p .9758465331678772))
+;; (p -.7895631144708228)
+;; -.39980345741334
+
+;; b. (sine a) generates a linear recursive procedure,
+;; so the space and number of steps grow linearly with proportion to a -> O(a)
