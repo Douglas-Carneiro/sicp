@@ -543,3 +543,9 @@
   (cond ((= b 0) 0)
 	((even? b) (fast-mult (double a) (halve b)))
 	(else (+ a (fast-mult a (- b 1))))))
+
+;; Exercise 1.18
+(define (fast-mult-iter a b n)
+  (cond ((= n 0) a)
+	((even? n) (fast-mult-iter a (double b) (halve n)))
+	(else (fast-mult-iter (+ a b) b (- n 1)))))
