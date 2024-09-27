@@ -681,3 +681,103 @@
 ;; (smallest-divisor 199) ;Value: 199
 ;; (smallest-divisor 1999) ;Value: 1999
 ;; (smallest-divisor 19999) ;Value: 7
+
+;; Exercise 1.22
+(define (timed-prime-test n)
+  (newline)
+  (display n)
+  (start-prime-test n (runtime)))
+(define (start-prime-test n start-time)
+  (if (prime? n)
+      (report-prime (- (runtime) start-time))))
+(define (report-prime elapsed-time)
+  (display " *** ")
+  (display elapsed-time))
+
+;; Some experiments:
+(with-timings
+           (lambda () (fib 35))
+           (lambda (run-time gc-time real-time)
+             (write (internal-time/ticks->seconds run-time))
+             (write-char #\space)
+             (write (internal-time/ticks->seconds gc-time))
+             (write-char #\space)
+             (write (internal-time/ticks->seconds real-time))
+             (newline)))
+(define (timed-fib-test n)
+  (newline)
+  (display n)
+  (start-fib-test n (internal-time/ticks->seconds (real-time-clock))))
+(define (start-fib-test n start-time)
+  (if (> (fib n) 0)
+      (report-prime (- (internal-time/ticks->seconds (real-time-clock)) start-time))))
+(define (report-prime elapsed-time)
+  (display " *** ")
+  (display elapsed-time))
+
+(define (report-time-for f n)
+  (with-timings
+           (lambda () (f n))
+           (lambda (run-time gc-time real-time)
+	     (display "Runtime: ")
+	     (write (internal-time/ticks->seconds run-time))
+             (write-char #\space)
+             (write (internal-time/ticks->seconds gc-time))
+             (write-char #\space)
+             (write (internal-time/ticks->seconds real-time))
+             (newline))))
+
+(report-time-for prime? 10000019)
+;; End of experiments
+
+(define (search-for-primes start limit)
+  (timed-prime-test start)
+  (if (< start limit)
+      (search-for-primes (+ start 2) limit)))
+
+(search-for-primes 100000000000001 100000000000100)
+
+;; * Since my computer is fast, and my scheme installation doesn't
+;; have functions for registering milliseconds,
+;; I had to start the experiments from 10000000000 instead of 1000
+
+;; Results for three smallest primes larger than 10000000000:
+;; 10000000019 -> .06999999999999995 seconds
+;; 10000000033 -> .07000000000000006 seconds
+;; 10000000061 -> .06999999999999995 seconds
+
+;; Results for three smallest primes larger than 100000000000:
+;; 100000000003 -> .21999999999999997 seconds
+;; 100000000019 -> .21999999999999997 seconds
+;; 100000000057 -> .20999999999999996 seconds
+
+;; Results for three smallest primes larger than 1000000000000:
+;; 1000000000039 -> .6500000000000004 seconds
+;; 1000000000061 -> .6600000000000001 seconds
+;; 1000000000063 -> .6399999999999997 seconds
+
+;; Results for three smallest primes larger than 10000000000000:
+;; 10000000000037 -> 2.039999999999999 seconds
+;; 10000000000051 -> 2.0599999999999987 seconds
+;; 10000000000099 -> 2.0600000000000023 seconds
+
+;; Results for three smallest primes larger than 100000000000000:
+;; 100000000000031 -> 6.489999999999998 seconds
+;; 100000000000067 -> 6.490000000000002 seconds
+;; 100000000000097 -> 6.529999999999994 seconds
+
+;; Observing the results is possible to note that the time needed
+;; to test each prime is indeed growing at approximately sqrt(10)
+
+;; Q: Do your timing data bear this out?
+;; A: Yes
+
+;; Q: How well do the data for 100,000 and 1,000,000 support the Θ(√n) prediction?
+;; A: Not well, the computation time in my machine is much faster than expected
+
+;; Q: Is your result compatible with the notion
+;; that programs on your machine run in time proportional to
+;; the number of steps required for the computation?
+;; A: Yes, even though the time needed for testing each prime is much smaller than
+;; expected, when going from one order of magnitude to the next,
+;; the time needed is approximately √10 times bigger.
