@@ -781,3 +781,44 @@
 ;; A: Yes, even though the time needed for testing each prime is much smaller than
 ;; expected, when going from one order of magnitude to the next,
 ;; the time needed is approximately √10 times bigger.
+
+;; Exercise 1.23
+
+(define (next n)
+  (if (> n 2)
+      (+ n 2)
+      3))
+(define (smallest-divisor n) (find-divisor n 2))
+(define (find-divisor n test-divisor)
+  (cond ((> (square test-divisor) n) n)
+	((divides? test-divisor n) test-divisor)
+	(else (find-divisor n (next test-divisor)))))
+(define (divides? a b) (= (remainder b a) 0))
+
+;; (search-for-primes 10000000001 10000000061)
+;; Results (using the next procedure) for three smallest primes larger than 10000000000:
+;; 10000000019 -> .06999999999999995 seconds (before using next), 3.9999999999999994e-2 seconds (after using next)
+;; 10000000033 -> .07000000000000006 seconds (before using next), .05000000000000002 seconds (after using next)
+;; 10000000061 -> .06999999999999995 seconds (before using next), .03999999999999998 seconds (after using next)
+
+;; (search-for-primes 100000000001 100000000057)
+;; Results (using the next procedure) for three smallest primes larger than 100000000000:
+;; 100000000003 -> .21999999999999997 seconds (before using next), .12000000000000002 seconds (after using next)
+;; 100000000019 -> .21999999999999997 seconds (before using next), .13999999999999996 seconds (after using next)
+;; 100000000057 -> .20999999999999996 seconds (before using next), .13 seconds (after using next)
+
+;; (search-for-primes 1000000000001 1000000000063)
+;; Results (using the next procedure) for three smallest primes larger than 1000000000000:
+;; 1000000000039 -> .6500000000000004 seconds (before using next), .41000000000000003 seconds (after using next)
+;; 1000000000061 -> .6600000000000001 seconds (before using next), .4099999999999999 seconds (after using next)
+;; 1000000000063 -> .6399999999999997 seconds (before using next), .40000000000000013 seconds (after using next)
+
+;; (search-for-primes 10000000000001 10000000000099)
+;; Results (using the next procedure) for three smallest primes larger than 10000000000000:
+;; 10000000000037 -> 2.039999999999999 seconds (before using next), 1.25 seconds (after using next)
+;; 10000000000051 -> 2.0599999999999987 seconds (before using next), 1.2600000000000002 seconds (after using next)
+;; 10000000000099 -> 2.0600000000000023 seconds (before using next), 1.2400000000000002 seconds (after using next)
+
+;; Q: Since this modiﬁcation halves the number of test steps, you should expect it to run about
+;; twice as fast. Is this expectation conﬁrmed?
+;; A: Yes, the tests show a reduction of roughly 50% in execution times.
