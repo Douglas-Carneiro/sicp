@@ -865,3 +865,27 @@
 ;; inside timed-prime-test is fixed.
 ;; Q: Do your data bear this out?
 ;; A: Yes.
+
+;; Exercise 1.25
+(define (expmod base exp m)
+  (cond ((= exp 0) 1)
+	((even? exp)
+	 (remainder
+	  (square (expmod base (/ exp 2) m))
+	  m))
+	(else
+	 (remainder
+	  (* base (expmod base (- exp 1) m))
+	  m))))
+
+(define (expmod base exp m)
+  (remainder (fast-expt base exp) m))
+
+;; Q: Is she correct?
+;; A: Yes.
+;; Q: Would this procedure serve as well for our fast prime tester? Explain.
+;; A: Yes, partially. The procedure generate large numbers when calling fast-expt
+;; with a big enough base or exp, since the original expmod performs the remainder
+;; operation with the m value, the intermediate return values when computing the final return value
+;; will be way smaller requiring less computational power to perform the operations. This factor makes
+;; the original expmod implementation more suitable to work with large numbers.
