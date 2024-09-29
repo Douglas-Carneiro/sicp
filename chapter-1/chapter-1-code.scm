@@ -822,3 +822,46 @@
 ;; Q: Since this modiﬁcation halves the number of test steps, you should expect it to run about
 ;; twice as fast. Is this expectation conﬁrmed?
 ;; A: Yes, the tests show a reduction of roughly 50% in execution times.
+
+;; Exercise 1.24
+(define (timed-prime-test n)
+  (newline)
+  (display n)
+  (start-prime-test n (runtime)))
+(define (start-prime-test n start-time)
+  (if (fast-prime? n 1000)
+      (report-prime (- (runtime) start-time))))
+(define (report-prime elapsed-time)
+  (display " *** ")
+  (display elapsed-time))
+
+;; (search-for-primes 10000000001 10000000061)
+;; Results (using the fast-prime? procedure) for three smallest primes larger than 10000000000:
+;; 10000000019 -> .06999999999999995 seconds (before using fast-prime?), .05000000000000071 seconds (after using fast-prime?)
+;; 10000000033 -> .07000000000000006 seconds (before using fast-prime?), .03999999999999915 seconds (after using fast-prime?)
+;; 10000000061 -> .06999999999999995 seconds (before using fast-prime?), 4.0000000000000924e-2 seconds (after using fast-prime?)
+
+;; (search-for-primes 100000000001 100000000057)
+;; Results (using the fast-prime? procedure) for three smallest primes larger than 100000000000:
+;; 100000000003 -> .21999999999999997 seconds (before using fast-prime?), .03999999999999915 seconds (after using fast-prime?)
+;; 100000000019 -> .21999999999999997 seconds (before using fast-prime?), 4.0000000000000924e-2 seconds (after using fast-prime?)
+;; 100000000057 -> .20999999999999996 seconds (before using fast-prime?), 4.9999999999998934e-2 seconds (after using fast-prime?)
+
+;; (search-for-primes 1000000000001 1000000000063)
+;; Results (using the fast-prime? procedure) for three smallest primes larger than 1000000000000:
+;; 1000000000039 -> .6500000000000004 seconds (before using fast-prime?), .05000000000000071 seconds (after using fast-prime?)
+;; 1000000000061 -> .6600000000000001 seconds (before using fast-prime?), .05000000000000071 seconds (after using fast-prime?)
+;; 1000000000063 -> .6399999999999997 seconds (before using fast-prime?), 4.9999999999998934e-2 seconds (after using fast-prime?)
+
+;; (search-for-primes 10000000000001 10000000000099)
+;; Results (using the fast-prime? procedure) for three smallest primes larger than 10000000000000:
+;; 10000000000037 -> 2.039999999999999 seconds (before using fast-prime?), .05000000000000071 seconds (after using fast-prime?)
+;; 10000000000051 -> 2.0599999999999987 seconds (before using fast-prime?), 4.9999999999998934e-2 seconds (after using fast-prime?)
+;; 10000000000099 -> 2.0600000000000023 seconds (before using fast-prime?), .05000000000000071 seconds (after using fast-prime?)
+
+;; Q: Since the Fermat test has Θ(log n) growth, how would you expect
+;; the time to test primes near 1,000,000 to compare with the time needed to test primes near 1000?
+;; A: I would expect to take the same time, since the number of tests in the fast-prime? call
+;; inside timed-prime-test is fixed.
+;; Q: Do your data bear this out?
+;; A: Yes.
