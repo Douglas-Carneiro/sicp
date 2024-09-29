@@ -889,3 +889,8 @@
 ;; operation with the m value, the intermediate return values when computing the final return value
 ;; will be way smaller requiring less computational power to perform the operations. This factor makes
 ;; the original expmod implementation more suitable to work with large numbers.
+
+;; Exercise 1.26
+;; By using two calls to expmod to calculate the square for even exponents
+;; Louis' code is defeating the purpose of the original implementation, because his code is
+;; using two calls that halve the input size, basically the code is doing the calculation in linear time.
