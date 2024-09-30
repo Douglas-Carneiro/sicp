@@ -894,3 +894,14 @@
 ;; By using two calls to expmod to calculate the square for even exponents
 ;; Louis' code is defeating the purpose of the original implementation, because his code is
 ;; using two calls that halve the input size, basically the code is doing the calculation in linear time.
+
+;; Exercise 1.27
+(define (foolable-fermat-test n)
+  (define (iter a n)
+    (cond ((= a n) true)
+	  ((= (expmod a n n) a) (iter (+ a 1) n))
+	  (else false)))
+  (iter 1 n))
+
+;; The above procedure returns #t (true) to the following
+;; Carmichael numbers: 561, 1105, 1729, 2465, 2821, and 6601
