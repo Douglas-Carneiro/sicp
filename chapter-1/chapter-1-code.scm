@@ -905,3 +905,40 @@
 
 ;; The above procedure returns #t (true) to the following
 ;; Carmichael numbers: 561, 1105, 1729, 2465, 2821, and 6601
+
+;; Exercise 1.28
+
+;; Iterative expmod for an experiment
+(define (expmod-iter a base exp m)
+  (cond ((= exp 0) a)
+	((even? exp) (expmod-iter a (remainder (square base) m) (/ exp 2) m))
+	(else
+	 (expmod-iter (remainder (* a base) m) base (- exp 1) m))))
+
+;; Inspiration: http://community.schemewiki.org/?sicp-ex-1.28
+(define (expmod base exp m)
+  (cond ((= exp 0) 1)
+	((even? exp)
+	 (nontrivial-square-test (expmod base (/ exp 2) m) m))
+	(else
+	 (remainder
+	  (* base (expmod base (- exp 1) m))
+	  m))))
+
+(define (nontrivial-square-test x m)
+  (let ((y (remainder (square x) m)))
+    (if (and (= y 1) (not (= x 1)) (not (= x (- m 1))))
+	0
+	y)))
+
+(define (miller-rabin-test n)
+  (define (try-it a)
+    (= (expmod a (- n 1) n) 1))
+  (try-it (+ 1 (random (- n 1)))))
+
+(define (fast-prime? n times)
+  (cond ((= times 0) true)
+	((miller-rabin-test n) (fast-prime? n (- times 1)))
+	(else false)))
+
+;; TODO: Study mutual recursion to really understand the solution
