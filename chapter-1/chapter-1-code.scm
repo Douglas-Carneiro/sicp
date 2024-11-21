@@ -1008,3 +1008,11 @@
 
 (simpson-integral cube 0 1 100) ;; => 1/4
 (simpson-integral cube 0 1 1000) ;; => 1/4
+
+;; Exercise 1.30
+(define (sum term a next b)
+  (define (iter a result)
+  (if (> a b)
+    result
+    (iter (next a) (+ (term a) result))))
+  (iter a 0))
