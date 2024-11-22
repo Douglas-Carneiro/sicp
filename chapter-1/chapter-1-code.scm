@@ -1016,3 +1016,34 @@
     result
     (iter (next a) (+ (term a) result))))
   (iter a 0))
+
+;; Exercise 1.31
+
+;; a)
+(define (product term a next b)
+  (if (> a b)
+      1
+      (* (term a)
+	 (product term (next a) next b))))
+
+;; Factorial defined in terms of product:
+(define (factorial n)
+  (product identity 1 inc n))
+(factorial 6) ;; => 720
+(factorial 7) ;; => 5040
+
+;; Approximated value of pi/2 using Wallis product:
+;; https://en.wikipedia.org/wiki/Wallis_product
+(define (pi-wallis n)
+  (define (wallis-term x)
+    (* (/ (* 2 x) (- (* 2 x) 1))
+       (/ (* 2 x) (+ (* 2 x) 1))))
+  (product wallis-term 1 inc n))
+
+;; b) Iterative version of product
+(define (product term a next b)
+  (define (iter a result)
+    (if (> a b)
+	result
+	(iter (next a) (* (term a) result))))
+  (iter a 1))
