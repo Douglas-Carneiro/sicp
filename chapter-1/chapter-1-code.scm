@@ -1070,3 +1070,30 @@
 	result
 	(iter (next a) (combiner (term a) result))))
   (iter a null-value))
+
+;; Exercise 1.33
+(define (filtered-accumulate predicate? combiner null-value term a next b)
+  (cond
+   ((> a b) null-value)
+   ((predicate? a) (combiner (term a)
+			     (filtered-accumulate predicate?
+						  combiner
+						  null-value
+						  term (next a) next b)))
+   (else
+    (filtered-accumulate predicate?
+			 combiner
+			 null-value
+			 term (next a) next b))))
+
+;; Testing the procedure, this should return 6, 2+4
+(filtered-accumulate even? + 0 identity 1 inc 4)
+
+;; a.
+(filtered-accumulate prime? + 0 square 1 inc 10)
+
+;; b.
+;; Choose n as 10 for the answer
+(define (relatively-prime? i)
+  (= 1 (gcd i 10)))
+(filtered-accumulate relatively-prime? * 1 identity 1 inc 10)
