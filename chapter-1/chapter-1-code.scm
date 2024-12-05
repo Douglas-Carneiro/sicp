@@ -1097,3 +1097,55 @@
 (define (relatively-prime? i)
   (= 1 (gcd i 10)))
 (filtered-accumulate relatively-prime? * 1 identity 1 inc 10)
+
+;; 1.3.2 Constructing Procedures Using lambda
+(lambda (x) (+ x 4))
+(lambda (x) (/ 1.0 (* x (+ x 2))))
+
+(define (pi-sum a b)
+  (sum (lambda (x) (/ 1.0 (* x (+ x 2))))
+     a
+     (lambda (x) (+ x 4))
+     b))
+(define (integral f a b dx)
+  (* (sum f
+	  (+ a (/ dx 2.0))
+	  (lambda (x) (+ x dx))
+	  b)
+     dx))
+
+;; Using let to create local variables
+(define (f x y)
+  (define (f-helper a b)
+    (+ (* x (square a))
+       (* y b)
+       (* a b)))
+  (f-helper (+ 1 (* x y))
+	    (- 1 y)))
+
+(define (f x y)
+  ((lambda (a b)
+     (+ (* x (square a))
+	(* y b)
+	(* a b)))
+   (+ 1 (* x y))
+   (- 1 y)))
+
+(define (f x y)
+  (let ((a (+ 1 (* x y)))
+	(b (- 1 y)))
+    (+ (* x (square a))
+       (* y b)
+       (* a b))))
+
+;; Exercise 1.34
+(define (f g) (g 2))
+(f square) ;; => 4
+(f (lambda (z) (* z (+ z 1)))) ;; => 6
+
+;; Q: What happens if we (perversely) ask the interpreter to
+;; evaluate the combination (f f)? Explain.
+;; A: The call to (f f) would return (f 2), since the parameter passed to
+;; f will be called as a function with the number 2, the result will be
+;; the list (2 2), 2 is not a function and the interpreter will throw
+;; an error.
